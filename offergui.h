@@ -12,13 +12,12 @@
 class OfferGUI : public QWidget {
 private:
 	ServiceOffer& serv;
+	QWidget* wish = new QWidget();
 	QWidget* window = new QWidget();
 	QHBoxLayout* hLay = new QHBoxLayout(window);
 	QVBoxLayout* vLay = new QVBoxLayout(window);
-	QFormLayout* formLayout = new QFormLayout();
-	QWidget* wish = new QWidget();
 	QVBoxLayout* vLayWish = new QVBoxLayout();
-	QListWidget* wishlist = new QListWidget();
+	QFormLayout* formLayout = new QFormLayout();
 	QFormLayout* formLayoutWish = new QFormLayout();
 	QPushButton* btnAdd = new QPushButton("Add");
 	QPushButton* btnDel = new QPushButton("Delete");
@@ -45,6 +44,7 @@ private:
 	QLineEdit* filter_price = new QLineEdit();
 	QLineEdit* position_of_offer = new QLineEdit();
 	QListWidget* offer_list = new QListWidget();
+	QListWidget* wishlist = new QListWidget();
 
 	void addOfferGUI();
 	void delOfferGUI();
