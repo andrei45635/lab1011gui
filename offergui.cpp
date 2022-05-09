@@ -9,6 +9,10 @@ void OfferGUI::initGUIfields() {
 	leftLayout->addWidget(offer_list);
 	leftLayout->addWidget(btnFiltDest);
 	leftLayout->addWidget(btnFiltPrice);
+	leftLayout->addWidget(btnSearch);
+	leftLayout->addWidget(btnSortDen);
+	leftLayout->addWidget(btnSortDest);
+	leftLayout->addWidget(btnSortTypePrice);
 	hLay->addWidget(windLeft);
 	QWidget* wind_det = new QWidget();
 	wind_det->setLayout(formLayout);
@@ -18,6 +22,7 @@ void OfferGUI::initGUIfields() {
 	formLayout->addRow(new QLabel("Price"), price_txt);
 	formLayout->addRow(new QLabel("Destination to filter"), filter_dest);
 	formLayout->addRow(new QLabel("Price to filter"), filter_price);
+	formLayout->addRow(new QLabel("Position to find"), position_of_offer);
 	hLay->addLayout(vLay);
 	vLay->addWidget(wind_det);
 	vLay->addWidget(btnAdd);
@@ -109,6 +114,89 @@ void OfferGUI::filtPriceGUI() {
 	updateList(offer_list);
 }
 
+void OfferGUI::searchOfferGUI() {
+	QDialog* dlg = new QDialog();
+	QVBoxLayout* vdlg = new QVBoxLayout();
+	QLabel* lblOffer = new QLabel();
+	dlg->setModal(true);
+	vdlg->addWidget(lblOffer);
+	dlg->setLayout(vdlg);
+	auto offer = serv.findOfferService(position_of_offer->text().toInt());
+	lblOffer->setText(QString::fromStdString(offer.toString()));
+	dlg->exec();
+	updateList(offer_list);
+}
+
+void OfferGUI::modifyOfferGUI() {
+	QDialog* dlg = new QDialog();
+	QVBoxLayout* vdlg = new QVBoxLayout();
+	QVBoxLayout* vdlg1 = new QVBoxLayout();
+	QFormLayout* formDlg = new QFormLayout();
+	QPushButton* modOffer = new QPushButton("Modify!");
+	dlg->setModal(true);
+	vdlg1->addWidget(modOffer);
+	formDlg->addRow(new QLabel("New name"), new_denum);
+	formDlg->addRow(new QLabel("New destination"), new_dest);
+	formDlg->addRow(new QLabel("New type"), new_type);
+	formDlg->addRow(new QLabel("New price"), new_price);
+	vdlg1->addLayout(vdlg);
+	vdlg->addLayout(formDlg);
+	dlg->setLayout(vdlg1);
+	try {
+		QObject::connect(modOffer, &QPushButton::clicked, this, &OfferGUI::modGUI);
+		updateList(offer_list);
+	}
+	catch (ValidException& msg) {
+		QMessageBox::critical(this, "Eroare la validare!", QString::fromStdString(msg.get_msg()));
+	}
+	dlg->exec();
+}
+
+void OfferGUI::modGUI() {
+	Offer old_ofr{ denumire_txt->text().toStdString(), destinatie_txt->text().toStdString(), type_txt->text().toStdString(), price_txt->text().toDouble() };
+	Offer new_ofr{ new_denum->text().toStdString(), new_dest->text().toStdString(), new_type->text().toStdString(), new_price->text().toDouble() };
+	serv.modifyServiceForUndo(old_ofr, new_ofr);
+}
+
+void OfferGUI::sortDenumGUI() {
+	const auto& sorted = serv.sortDenumire();
+	offer_list->clear();
+	for (const auto& srt : sorted) {
+		QString string = QString::fromStdString(srt.toString());
+		QListWidgetItem* item = new QListWidgetItem(string, offer_list);
+	}
+}
+
+void OfferGUI::sortDestGUI() {
+	const auto& sorted = serv.sortDest();
+	offer_list->clear();
+	for (const auto& srt : sorted) {
+		QString string = QString::fromStdString(srt.toString());
+		QListWidgetItem* item = new QListWidgetItem(string, offer_list);
+	}
+}
+
+void OfferGUI::sortTypePriceGUI() {
+	//const auto& sorted = serv.sortFinal();
+	const auto& sorted = serv.sorted();
+	offer_list->clear();
+	for (const auto& srt : sorted) {
+		QString string = QString::fromStdString(srt.toString());
+		QListWidgetItem* item = new QListWidgetItem(string, offer_list);
+	}
+}
+
+void OfferGUI::createWishlistGUI() {
+	wish->setLayout(vLayWish);
+	vLayWish->addWidget(wishlist);
+	vLayWish->addLayout(formLayoutWish);
+	formLayoutWish->addRow(new QLabel("Destination"), wish_dest);
+	vLayWish->addWidget(btnAddWishlist);
+	vLayWish->addWidget(btnDelWishlist);
+	vLayWish->addWidget(btnRandomWishlist);
+	wish->show();
+}
+
 void OfferGUI::on_click_add() {
 	QObject::connect(btnAdd, &QPushButton::clicked, this, &OfferGUI::addOfferGUI);
 }
@@ -123,4 +211,24 @@ void OfferGUI::on_click_filter_dest() {
 
 void OfferGUI::on_click_filter_price() {
 	QObject::connect(btnFiltPrice, &QPushButton::clicked, this, &OfferGUI::filtPriceGUI);
+}
+
+void OfferGUI::on_click_search() {
+	QObject::connect(btnSearch, &QPushButton::clicked, this, &OfferGUI::searchOfferGUI);
+}
+
+void OfferGUI::on_click_modify() {
+	QObject::connect(btnModify, &QPushButton::clicked, this, &OfferGUI::modifyOfferGUI);
+}
+
+void OfferGUI::on_click_sort_denum() {
+	QObject::connect(btnSortDen, &QPushButton::clicked, this, &OfferGUI::sortDenumGUI);
+}
+
+void OfferGUI::on_click_sort_dest() {
+	QObject::connect(btnSortDest, &QPushButton::clicked, this, &OfferGUI::sortDestGUI);
+}
+
+void OfferGUI::on_click_sort_type_price() {
+	QObject::connect(btnSortDest, &QPushButton::clicked, this, &OfferGUI::sortTypePriceGUI);
 }

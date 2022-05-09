@@ -35,7 +35,7 @@ void ServiceOffer::modifyServiceOffer(int pos, string new_denum, string new_dest
 }
 
 void ServiceOffer::modifyServiceForUndo(const Offer& old_ofr, const Offer& new_ofr) {
-	valid.validate_offer(new_ofr);
+	//valid.validate_offer(new_ofr);
 	repo.modifyOfferForUndo(old_ofr, new_ofr);
 	undoList.push_back(std::make_unique<ModifyUndo>(repo, old_ofr, new_ofr));
 }
@@ -92,22 +92,24 @@ vector<Offer> ServiceOffer::sortDenumire() {
 	return generalSort([](const Offer& ofr1, const Offer& ofr2) { return (ofr1.getDenumire() < ofr2.getDenumire()); });
 }
 
-/*vector<Offer> ServiceOffer::sortDen() {
-	auto& offers = getAllService();
-	std::sort(offers.begin(), offers.end(), [](const Offer ofr1, const Offer& ofr2) {return (ofr1.getDenumire() < ofr2.getDenumire()); });
-	return offers;
-}*/
-
 vector<Offer> ServiceOffer::sortDest() {
 	//return generalSort(sortByType);
 	return generalSort([](const Offer& ofr1, const Offer& ofr2) { return (ofr1.getDestinatie() < ofr2.getDestinatie()); });
 }
 
 vector<Offer> ServiceOffer::sortFinal() {
-	vector<Offer> typed = generalSort([](const Offer& ofr1, const Offer& ofr2) { return (ofr1.getType() < ofr2.getType()); });
+	vector<Offer> typed = generalSort([](const Offer& ofr1, const Offer& ofr2) { return (ofr1.getType() < ofr2.getType() || (ofr1.getPrice() < ofr2.getPrice())); });
 	vector<Offer> priced = typed;
 	priced = generalSort([](const Offer& ofr1, const Offer& ofr2) {return ofr1.getPrice() < ofr2.getPrice(); });
 	return priced;
+}
+
+vector<Offer> ServiceOffer::sorted() {
+	vector<Offer> typed = generalSort([](const Offer& ofr1, const Offer& ofr2) { return (ofr1.getType() < ofr2.getType() || (ofr1.getPrice() < ofr2.getPrice())); });
+	auto sortofs = getAllService();
+	std::sort(sortofs.begin(), sortofs.end(), [](const Offer& ofr1, const Offer& ofr2) {
+		return (ofr1.getType() < ofr2.getType()) && (ofr1.getPrice() < ofr2.getPrice()); });
+	return getAllService();
 }
 
 void ServiceOffer::check_if_Kiev(const vector<Offer>& hohols) {
@@ -308,8 +310,8 @@ void testSorts() {
 	assert(sorted2[0].getPrice() == 69);
 	const auto& sorted3 = test_serv.sortFinal();
 	assert(sorted3[0].getDenumire() == "Familie");
-	//const auto& sorted4 = test_serv.sortDen();
-	//assert(sorted4[0].getDenumire() == "Business");
+	const auto& sorted4 = test_serv.sorted();
+	assert(sorted4[0].getDenumire() == "Familie");
 }
 
 void testAddCart() {

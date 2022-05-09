@@ -87,7 +87,7 @@ public:
 
 	vector<Offer> sortFinal();
 
-	vector<Offer> sortDen();
+	vector<Offer> sorted();
 
 	void delete_from_wishlist();
 
