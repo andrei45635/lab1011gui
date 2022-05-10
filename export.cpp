@@ -3,7 +3,7 @@
 
 void exportToHTML(const std::string& fileName, const std::vector<Offer>& offers) {
 	std::ofstream out(fileName, std::ios::trunc);
-	if (!out.is_open()) throw RepoException{ "File" + fileName + "can't be opened\n" };
+	if (!out.is_open()) throw RepoException{ "File " + fileName + " can't be opened\n" };
 	out << "<html>" << std::endl;
 	out << "<head><style>" << std::endl;
 	out << "th, td {" << std::endl;

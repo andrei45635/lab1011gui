@@ -31,6 +31,7 @@ private:
 	QPushButton* btnAddWishlist = new QPushButton("Add to the wishlist");
 	QPushButton* btnDelWishlist = new QPushButton("Delete from wishlist");
 	QPushButton* btnRandomWishlist = new QPushButton("Generate random offers");
+	QPushButton* btnExportHTML = new QPushButton("Export the wishlist to HTML");
 	QLineEdit* denumire_txt = new QLineEdit();
 	QLineEdit* destinatie_txt = new QLineEdit();
 	QLineEdit* type_txt = new QLineEdit();
@@ -43,6 +44,8 @@ private:
 	QLineEdit* filter_dest = new QLineEdit();
 	QLineEdit* filter_price = new QLineEdit();
 	QLineEdit* position_of_offer = new QLineEdit();
+	QLineEdit* randomNumber = new QLineEdit();
+	QLineEdit* fileName = new QLineEdit();
 	QListWidget* offer_list = new QListWidget();
 	QListWidget* wishlist = new QListWidget();
 
@@ -57,6 +60,10 @@ private:
 	void sortDestGUI();
 	void sortTypePriceGUI();
 	void createWishlistGUI();
+	void addWishlistGUI();
+	void delWishlistGUI();
+	void randomWishlistGUI();
+	void exportHTMLGUI();
 	void on_click_add();
 	void on_click_del();
 	void on_click_filter_dest();
@@ -66,8 +73,13 @@ private:
 	void on_click_sort_denum();
 	void on_click_sort_dest();
 	void on_click_sort_type_price();
+	void on_click_add_wishlist();
+	void on_click_del_wishlist();
+	void on_click_random_wishlist();
+	void on_click_export_HTML();
 	void initGUIfields();
 	void updateList(QListWidget* lst);
+	void updateWish(QListWidget* wishlst);
 
 public:
 	OfferGUI(ServiceOffer& serv) : serv{ serv } {
@@ -82,6 +94,11 @@ public:
 		on_click_sort_denum();
 		on_click_sort_dest();
 		on_click_sort_type_price();
+		on_click_add_wishlist();
+		on_click_del_wishlist();
+		on_click_random_wishlist();
+		on_click_export_HTML();
 		updateList(offer_list);
+		updateWish(wishlist);
 	}
 };

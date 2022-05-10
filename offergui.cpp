@@ -38,6 +38,14 @@ void OfferGUI::updateList(QListWidget* lst) {
 	}
 }
 
+void OfferGUI::updateWish(QListWidget* wishlst) {
+	wishlist->clear();
+	for (const auto& wsh : serv.get_all_from_wish()) {
+		QString string = QString::fromStdString(wsh.toString());
+		QListWidgetItem* item = new QListWidgetItem(string, wishlst);
+	}
+}
+
 void OfferGUI::addOfferGUI() {
 	try {
 		serv.addServiceOffer(denumire_txt->text().toStdString(), destinatie_txt->text().toStdString(), type_txt->text().toStdString(), price_txt->text().toDouble());
@@ -191,10 +199,55 @@ void OfferGUI::createWishlistGUI() {
 	vLayWish->addWidget(wishlist);
 	vLayWish->addLayout(formLayoutWish);
 	formLayoutWish->addRow(new QLabel("Destination"), wish_dest);
+	formLayoutWish->addRow(new QLabel("Random generator"), randomNumber);
+	formLayoutWish->addRow(new QLabel("File name (add .html)"), fileName);
 	vLayWish->addWidget(btnAddWishlist);
 	vLayWish->addWidget(btnDelWishlist);
 	vLayWish->addWidget(btnRandomWishlist);
+	vLayWish->addWidget(btnExportHTML);
 	wish->show();
+}
+
+void OfferGUI::addWishlistGUI() {
+	try {
+		serv.add_to_wishlist(wish_dest->text().toStdString());
+		updateWish(wishlist);
+		updateList(offer_list);
+	}
+	catch (WishExcept& msg) {
+		QMessageBox::critical(this, "Eroare!", QString::fromStdString(msg.getMessage()));
+	}
+}
+
+void OfferGUI::delWishlistGUI() {
+	wishlist->clear();
+}
+
+void OfferGUI::randomWishlistGUI() {
+	try {
+		serv.generate_random_offers(randomNumber->text().toInt());
+		updateWish(wishlist);
+		updateList(offer_list);
+	}
+	catch (WishExcept& msg) {
+		QMessageBox::critical(this, "Eroare!", QString::fromStdString(msg.getMessage()));
+	}
+	catch (ValidException& msg) {
+		QMessageBox::critical(this, "Eroare critica!", QString::fromStdString(msg.get_msg()));
+	}
+	catch (RepoException& msg) {
+		QMessageBox::critical(this, "Eroare critica!", QString::fromStdString(msg.getMessage()));
+	}
+}
+
+void OfferGUI::exportHTMLGUI() {
+	try {
+		serv.exporta_cos_HTML(fileName->text().toStdString());
+	}
+	catch (RepoException& msg) {
+		QMessageBox::critical(this, "Eroare critica!", QString::fromStdString(msg.getMessage()));
+	}
+	QMessageBox::information(wish, "Success!", QString::fromStdString("Successfully exported!"));
 }
 
 void OfferGUI::on_click_add() {
@@ -231,4 +284,20 @@ void OfferGUI::on_click_sort_dest() {
 
 void OfferGUI::on_click_sort_type_price() {
 	QObject::connect(btnSortDest, &QPushButton::clicked, this, &OfferGUI::sortTypePriceGUI);
+}
+
+void OfferGUI::on_click_add_wishlist() {
+	QObject::connect(btnAddWishlist, &QPushButton::clicked, this, &OfferGUI::addWishlistGUI);
+}
+
+void OfferGUI::on_click_del_wishlist() {
+	QObject::connect(btnDelWishlist, &QPushButton::clicked, this, &OfferGUI::delWishlistGUI);
+}
+
+void OfferGUI::on_click_random_wishlist() {
+	QObject::connect(btnRandomWishlist, &QPushButton::clicked, this, &OfferGUI::randomWishlistGUI);
+}
+
+void OfferGUI::on_click_export_HTML() {
+	QObject::connect(btnExportHTML, &QPushButton::clicked, this, &OfferGUI::exportHTMLGUI);
 }
