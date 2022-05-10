@@ -49,13 +49,14 @@ private:
 	QLineEdit* position_of_offer = new QLineEdit();
 	QLineEdit* randomNumber = new QLineEdit();
 	QLineEdit* fileName = new QLineEdit();
+	QLineEdit* positionToMod = new QLineEdit();
 	QListWidget* offer_list = new QListWidget();
 	QListWidget* wishlist = new QListWidget();
 
 	void addOfferGUI();
 	void delOfferGUI();
 	void modifyOfferGUI();
-	void modGUI(); //TODO
+	void modGUI();
 	void searchOfferGUI();
 	void filtDestGUI();
 	void filtPriceGUI();
@@ -109,6 +110,5 @@ public:
 		on_click_undo();
 		on_click_populate();
 		updateList(offer_list);
-		//updateWish(wishlist);
 	}
 };

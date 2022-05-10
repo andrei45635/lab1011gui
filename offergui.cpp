@@ -173,6 +173,7 @@ void OfferGUI::modifyOfferGUI() {
 	QPushButton* modOffer = new QPushButton("Modify!");
 	dlg->setModal(true);
 	vdlg1->addWidget(modOffer);
+	formDlg->addRow(new QLabel("Position to modify"), positionToMod);
 	formDlg->addRow(new QLabel("New name"), new_denum);
 	formDlg->addRow(new QLabel("New destination"), new_dest);
 	formDlg->addRow(new QLabel("New type"), new_type);
@@ -191,9 +192,8 @@ void OfferGUI::modifyOfferGUI() {
 }
 
 void OfferGUI::modGUI() {
-	Offer old_ofr{ denumire_txt->text().toStdString(), destinatie_txt->text().toStdString(), type_txt->text().toStdString(), price_txt->text().toDouble() };
-	Offer new_ofr{ new_denum->text().toStdString(), new_dest->text().toStdString(), new_type->text().toStdString(), new_price->text().toDouble() };
-	serv.modifyServiceForUndo(old_ofr, new_ofr);
+	serv.modifyServiceOffer(positionToMod->text().toInt(), new_denum->text().toStdString(), new_dest->text().toStdString(), new_type->text().toStdString(), new_price->text().toDouble());
+	updateList(offer_list);
 }
 
 void OfferGUI::sortDenumGUI() {
