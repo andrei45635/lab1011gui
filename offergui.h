@@ -34,6 +34,7 @@ private:
 	QPushButton* btnDelWishlist = new QPushButton("Delete from wishlist");
 	QPushButton* btnRandomWishlist = new QPushButton("Generate random offers");
 	QPushButton* btnExportHTML = new QPushButton("Export the wishlist to HTML");
+	QPushButton* btnPopulate = new QPushButton("Populate with 8 offers!");
 	QLineEdit* denumire_txt = new QLineEdit();
 	QLineEdit* destinatie_txt = new QLineEdit();
 	QLineEdit* type_txt = new QLineEdit();
@@ -67,6 +68,7 @@ private:
 	void randomWishlistGUI();
 	void exportHTMLGUI();
 	void undoGUI();
+	void populateGUI();
 	void on_click_add();
 	void on_click_del();
 	void on_click_filter_dest();
@@ -82,6 +84,7 @@ private:
 	void on_click_export_HTML();
 	void on_click_undo();
 	void on_click_createWishlistGUI();
+	void on_click_populate();
 	void initGUIfields();
 	void updateList(QListWidget* lst);
 	void updateWish(QListWidget* wishlst);
@@ -104,6 +107,7 @@ public:
 		on_click_random_wishlist();
 		on_click_export_HTML();
 		on_click_undo();
+		on_click_populate();
 		updateList(offer_list);
 		//updateWish(wishlist);
 	}
