@@ -28,6 +28,8 @@ private:
 	QPushButton* btnSortDen = new QPushButton("Sort by name");
 	QPushButton* btnSortDest = new QPushButton("Sort by destination");
 	QPushButton* btnSortTypePrice = new QPushButton("Sort by type and price");
+	QPushButton* btnUndo = new QPushButton("Undo last operation");
+	QPushButton* btnWish = new QPushButton("Generate a wishlist");
 	QPushButton* btnAddWishlist = new QPushButton("Add to the wishlist");
 	QPushButton* btnDelWishlist = new QPushButton("Delete from wishlist");
 	QPushButton* btnRandomWishlist = new QPushButton("Generate random offers");
@@ -64,6 +66,7 @@ private:
 	void delWishlistGUI();
 	void randomWishlistGUI();
 	void exportHTMLGUI();
+	void undoGUI();
 	void on_click_add();
 	void on_click_del();
 	void on_click_filter_dest();
@@ -77,6 +80,8 @@ private:
 	void on_click_del_wishlist();
 	void on_click_random_wishlist();
 	void on_click_export_HTML();
+	void on_click_undo();
+	void on_click_createWishlistGUI();
 	void initGUIfields();
 	void updateList(QListWidget* lst);
 	void updateWish(QListWidget* wishlst);
@@ -84,7 +89,7 @@ private:
 public:
 	OfferGUI(ServiceOffer& serv) : serv{ serv } {
 		initGUIfields();
-		createWishlistGUI();
+		on_click_createWishlistGUI();
 		on_click_add();
 		on_click_del();
 		on_click_filter_dest();
@@ -98,7 +103,8 @@ public:
 		on_click_del_wishlist();
 		on_click_random_wishlist();
 		on_click_export_HTML();
+		on_click_undo();
 		updateList(offer_list);
-		updateWish(wishlist);
+		//updateWish(wishlist);
 	}
 };

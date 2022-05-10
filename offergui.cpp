@@ -28,6 +28,8 @@ void OfferGUI::initGUIfields() {
 	vLay->addWidget(btnAdd);
 	vLay->addWidget(btnDel);
 	vLay->addWidget(btnModify);
+	vLay->addWidget(btnUndo);
+	vLay->addWidget(btnWish);
 }
 
 void OfferGUI::updateList(QListWidget* lst) {
@@ -63,6 +65,16 @@ void OfferGUI::delOfferGUI() {
 	try {
 		Offer ofr{ denumire_txt->text().toStdString(), destinatie_txt->text().toStdString(), type_txt->text().toStdString(), price_txt->text().toDouble() };
 		serv.deleteServiceForUndo(ofr);
+		updateList(offer_list);
+	}
+	catch (RepoException& msg) {
+		QMessageBox::critical(this, "Eroare critica!", QString::fromStdString(msg.getMessage()));
+	}
+}
+
+void OfferGUI::undoGUI() {
+	try {
+		serv.Undo();
 		updateList(offer_list);
 	}
 	catch (RepoException& msg) {
@@ -225,9 +237,17 @@ void OfferGUI::delWishlistGUI() {
 
 void OfferGUI::randomWishlistGUI() {
 	try {
-		serv.generate_random_offers(randomNumber->text().toInt());
-		updateWish(wishlist);
-		updateList(offer_list);
+		if (randomNumber->text().toInt() < 0) {
+			QMessageBox::critical(this, "Eroare!", QString::fromStdString("You can't generate negative offers!"));
+		}
+		else if ( randomNumber->text().toInt() > serv.get_all_from_wish().size()) {
+			QMessageBox::critical(this, "Eroare!", QString::fromStdString("Invalid number!"));
+		}
+		else {
+			serv.generate_random_offers(randomNumber->text().toInt());
+			updateWish(wishlist);
+			updateList(offer_list);
+		}
 	}
 	catch (WishExcept& msg) {
 		QMessageBox::critical(this, "Eroare!", QString::fromStdString(msg.getMessage()));
@@ -300,4 +320,12 @@ void OfferGUI::on_click_random_wishlist() {
 
 void OfferGUI::on_click_export_HTML() {
 	QObject::connect(btnExportHTML, &QPushButton::clicked, this, &OfferGUI::exportHTMLGUI);
+}
+
+void OfferGUI::on_click_undo() {
+	QObject::connect(btnUndo, &QPushButton::clicked, this, &OfferGUI::undoGUI);
+}
+
+void OfferGUI::on_click_createWishlistGUI() {
+	QObject::connect(btnWish, &QPushButton::clicked, this, &OfferGUI::createWishlistGUI);
 }
