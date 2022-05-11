@@ -1,5 +1,9 @@
 #pragma once
 #include "qwidget.h"
+#include <time.h>
+#include <algorithm>
+#include <chrono>
+#include <random>
 #include "qlabel.h"
 #include "qpushbutton.h"
 #include "offer_service.h"
@@ -8,6 +12,8 @@
 #include "qboxlayout.h"
 #include "qformlayout.h"
 #include "qmessagebox.h"
+#include "qpixmap.h"
+#include "qfont.h"
 
 class OfferGUI : public QWidget {
 private:
@@ -36,6 +42,7 @@ private:
 	QPushButton* btnRandomWishlist = new QPushButton("Generate random offers");
 	QPushButton* btnExportHTML = new QPushButton("Export the wishlist to HTML");
 	QPushButton* btnPopulate = new QPushButton("Populate with 8 offers!");
+	QPushButton* btnMoisa = new QPushButton("Capitalist Capitals");
 	QLineEdit* denumire_txt = new QLineEdit();
 	QLineEdit* destinatie_txt = new QLineEdit();
 	QLineEdit* type_txt = new QLineEdit();
@@ -70,6 +77,7 @@ private:
 	void randomWishlistGUI();
 	void exportHTMLGUI();
 	void undoGUI();
+	void moisaGUI();
 	void populateGUI();
 	void on_click_add();
 	void on_click_del();
@@ -87,6 +95,7 @@ private:
 	void on_click_undo();
 	void on_click_createWishlistGUI();
 	void on_click_populate();
+	void on_click_moisa();
 	void initGUIfields();
 	void updateList(QListWidget* lst);
 	void updateWish(QListWidget* wishlst);
@@ -111,6 +120,7 @@ public:
 		on_click_export_HTML();
 		on_click_undo();
 		on_click_populate();
+		on_click_moisa();
 		updateList(offer_list);
 	}
 };

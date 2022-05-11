@@ -31,6 +31,7 @@ void OfferGUI::initGUIfields() {
 	vLay->addWidget(btnUndo);
 	vLay->addWidget(btnWish);
 	vLay->addWidget(btnPopulate);
+	vLay->addWidget(btnMoisa);
 }
 
 void OfferGUI::updateList(QListWidget* lst) {
@@ -300,6 +301,54 @@ void OfferGUI::exportHTMLGUI() {
 	QMessageBox::information(wish, "Success!", QString::fromStdString("Successfully exported!"));
 }
 
+void OfferGUI::moisaGUI() {
+	QWidget* dlg = new QWidget();
+	QVBoxLayout* vdlg = new QVBoxLayout();
+	QHBoxLayout* hdlg = new QHBoxLayout();
+	QListWidget* moisaList = new QListWidget();
+	QLabel* moisaLbl = new QLabel();
+	QLabel* moisaLbl1 = new QLabel();
+	dlg->setLayout(vdlg);
+	vdlg->addWidget(moisaList);
+	moisaList->setFixedSize(425, 50);
+	QPixmap pic("moisa_good.png");
+	moisaLbl->setPixmap(pic.scaled(150, 150, Qt::KeepAspectRatio));
+	moisaLbl1->setText("Moisa's approved capitalist capitals offer!\n\nNow with Moisa's seal of approval!");
+	QFont font = moisaLbl1->font();
+	font.setPointSize(12);
+	moisaLbl1->setFont(font);
+	hdlg->addWidget(moisaLbl);
+	hdlg->addWidget(moisaLbl1);
+	vdlg->addLayout(hdlg);
+	vector<std::string> capitals{ "Paris", "Washington D.C.", "London", "Hong Kong", "Sydney", "Berlin", "Rome", "Madrid", "Lisbon", "Dublin", "Ottawa", "Beijing" };
+	vector<std::string> types{ "Voyage", "Roadtrip", "Train", "Flight" };
+	vector<std::string> names{ "Business", "Family", "Leisure", "Couples", "Group" };
+	int randIndexCapitals = rand() % 12;
+	int randIndexTypes = rand() % 4;
+	int randIndexNames = rand() % 5;
+	auto sneed = std::chrono::system_clock::now().time_since_epoch().count();
+	double price = std::rand();
+	std::shuffle(names.begin(), names.end(), std::default_random_engine((unsigned int)sneed));
+	std::shuffle(capitals.begin(), capitals.end(), std::default_random_engine((unsigned int)sneed + 1));
+	std::shuffle(types.begin(), types.end(), std::default_random_engine((unsigned int)sneed + 2));
+	Offer ofr{ names[randIndexNames], capitals[randIndexCapitals], types[randIndexTypes], round(price) / 100.00 };
+	try {
+		serv.addServiceOffer(names[randIndexNames], capitals[randIndexCapitals], types[randIndexTypes], round(price)/100.00);
+		updateList(offer_list);
+	}
+	catch (ValidException& msg) {
+		QMessageBox::critical(this, "Eroare critica!", QString::fromStdString(msg.get_msg()));
+	}
+	catch (RepoException& msg) {
+		QMessageBox::critical(this, "Eroare critica!", QString::fromStdString(msg.getMessage()));
+	}
+	QString moisaString = QString::fromStdString(ofr.toString());
+	QListWidgetItem* item = new QListWidgetItem(moisaString, moisaList);
+	//updateList(moisaList);
+	updateList(offer_list);
+	dlg->show();
+}
+
 void OfferGUI::on_click_add() {
 	QObject::connect(btnAdd, &QPushButton::clicked, this, &OfferGUI::addOfferGUI);
 }
@@ -362,4 +411,8 @@ void OfferGUI::on_click_createWishlistGUI() {
 
 void OfferGUI::on_click_populate() {
 	QObject::connect(btnPopulate, &QPushButton::clicked, this, &OfferGUI::populateGUI);
+}
+
+void OfferGUI::on_click_moisa() {
+	QObject::connect(btnMoisa, &QPushButton::clicked, this, &OfferGUI::moisaGUI);
 }
