@@ -6,6 +6,7 @@ void OfferGUI::initGUIfields() {
 	QWidget* windLeft = new QWidget();
 	QVBoxLayout* leftLayout = new QVBoxLayout();
 	windLeft->setLayout(leftLayout);
+	offer_list->setFixedSize(460, 200);
 	leftLayout->addWidget(offer_list);
 	leftLayout->addWidget(btnFiltDest);
 	leftLayout->addWidget(btnFiltPrice);
@@ -20,8 +21,6 @@ void OfferGUI::initGUIfields() {
 	formLayout->addRow(new QLabel("Destination"), destinatie_txt);
 	formLayout->addRow(new QLabel("Type"), type_txt);
 	formLayout->addRow(new QLabel("Price"), price_txt);
-	formLayout->addRow(new QLabel("Destination to filter"), filter_dest);
-	formLayout->addRow(new QLabel("Price to filter"), filter_price);
 	formLayout->addRow(new QLabel("Position to find"), position_of_offer);
 	hLay->addLayout(vLay);
 	vLay->addWidget(wind_det);
@@ -105,23 +104,24 @@ void OfferGUI::filtDestGUI() {
 	QDialog* dlg = new QDialog();
 	QListWidget* dlgList = new QListWidget();
 	QHBoxLayout* hDlg = new QHBoxLayout();
+	QVBoxLayout* vDlg = new QVBoxLayout();
+	QFormLayout* formFiltDest = new QFormLayout();
+	QPushButton* btnFiltInside = new QPushButton("Filter!");
 	dlg->setModal(true);
+	vDlg->addWidget(btnFiltInside);
 	hDlg->addWidget(dlgList);
+	hDlg->addLayout(vDlg);
+	formFiltDest->addRow(new QLabel("Destination to filter"), filter_price);
+	hDlg->addLayout(formFiltDest);
 	dlg->setLayout(hDlg);
 	dlgList->clear();
-	try {
-		const auto& filtered = serv.filtrare_dest(filter_dest->text().toStdString());
+	QObject::connect(btnFiltInside, &QPushButton::clicked, this, [&]() {
+		const auto& filtered = serv.filtrare_dest(filter_price->text().toStdString());
 		for (const auto& ofr : filtered) {
 			QString string = QString::fromStdString(ofr.toString());
 			QListWidgetItem* item = new QListWidgetItem(string, dlgList);
 		}
-	}
-	catch (ValidException& msg) {
-		QMessageBox::critical(this, "Eroare critica!", QString::fromStdString(msg.get_msg()));
-	}
-	catch (RepoException& msg) {
-		QMessageBox::critical(this, "Eroare critica!", QString::fromStdString(msg.getMessage()));
-	}
+		});
 	dlg->exec();
 	updateList(dlgList);
 	updateList(offer_list);
@@ -131,23 +131,24 @@ void OfferGUI::filtPriceGUI() {
 	QDialog* dlg = new QDialog();
 	QListWidget* dlgList = new QListWidget();
 	QHBoxLayout* hDlg = new QHBoxLayout();
+	QVBoxLayout* vDlg = new QVBoxLayout();
+	QFormLayout* formFiltPrice = new QFormLayout();
+	QPushButton* btnFiltInside = new QPushButton("Filter!");
 	dlg->setModal(true);
+	vDlg->addWidget(btnFiltInside);
 	hDlg->addWidget(dlgList);
+	hDlg->addLayout(vDlg);
+	formFiltPrice->addRow(new QLabel("Price to filter"), filter_price);
+	hDlg->addLayout(formFiltPrice);
 	dlg->setLayout(hDlg);
 	dlgList->clear();
-	try {
+	QObject::connect(btnFiltInside, &QPushButton::clicked, this, [&]() {
 		const auto& filtered = serv.filtrare_pret(filter_price->text().toInt());
 		for (const auto& ofr : filtered) {
 			QString string = QString::fromStdString(ofr.toString());
 			QListWidgetItem* item = new QListWidgetItem(string, dlgList);
 		}
-	}
-	catch (ValidException& msg) {
-		QMessageBox::critical(this, "Eroare critica!", QString::fromStdString(msg.get_msg()));
-	}
-	catch (RepoException& msg) {
-		QMessageBox::critical(this, "Eroare critica!", QString::fromStdString(msg.getMessage()));
-	}
+		});
 	dlg->exec();
 	updateList(dlgList);
 	updateList(offer_list);
@@ -333,7 +334,7 @@ void OfferGUI::moisaGUI() {
 	std::shuffle(types.begin(), types.end(), std::default_random_engine((unsigned int)sneed + 2));
 	Offer ofr{ names[randIndexNames], capitals[randIndexCapitals], types[randIndexTypes], round(price) / 100.00 };
 	try {
-		serv.addServiceOffer(names[randIndexNames], capitals[randIndexCapitals], types[randIndexTypes], round(price)/100.00);
+		serv.addServiceOffer(names[randIndexNames], capitals[randIndexCapitals], types[randIndexTypes], round(price) / 100.00);
 		updateList(offer_list);
 	}
 	catch (ValidException& msg) {

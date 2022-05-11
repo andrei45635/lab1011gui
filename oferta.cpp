@@ -17,11 +17,11 @@ string Offer::getType() const {
 }
 
 double Offer::getPrice() const {
-	return price;
+	return round(price * 1000.0)/1000.0;
 }
 
 string Offer::toString() const {
-	return "Denumirea ofertei: " + denum + ", destinatia: " + dest + ", tipul: " + type + ", pretul: " + std::to_string(price);
+	return "Denumirea ofertei: " + denum + ", destinatia: " + dest + ", tipul: " + type + ", pretul: " + std::to_string(round(price * 1000.0) / 1000.0);
 }
 
 void testCreateOffer() {
