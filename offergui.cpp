@@ -224,9 +224,16 @@ void OfferGUI::sortTypePriceGUI() {
 	}
 }
 
+void OfferGUI::updateLabel(QLabel* lbl) {
+	lbl->clear();
+	lbl->setText("Current offers in the wishlist: " + QString::number(serv.get_all_from_wish().size()));
+}
+
 void OfferGUI::createWishlistGUI() {
 	wish->setLayout(vLayWish);
 	vLayWish->addWidget(wishlist);
+	updateLabel(currOfrs);
+	vLayWish->addWidget(currOfrs);
 	vLayWish->addLayout(formLayoutWish);
 	formLayoutWish->addRow(new QLabel("Destination"), wish_dest);
 	formLayoutWish->addRow(new QLabel("Random generator"), randomNumber);
@@ -243,6 +250,7 @@ void OfferGUI::addWishlistGUI() {
 		serv.add_to_wishlist(wish_dest->text().toStdString());
 		updateWish(wishlist);
 		updateList(offer_list);
+		updateLabel(currOfrs);
 	}
 	catch (WishExcept& msg) {
 		QMessageBox::critical(this, "Eroare!", QString::fromStdString(msg.getMessage()));
@@ -251,6 +259,9 @@ void OfferGUI::addWishlistGUI() {
 
 void OfferGUI::delWishlistGUI() {
 	wishlist->clear();
+	serv.delete_from_wishlist();
+	updateWish(wishlist);
+	updateLabel(currOfrs);
 }
 
 void OfferGUI::randomWishlistGUI() {
@@ -265,6 +276,7 @@ void OfferGUI::randomWishlistGUI() {
 			serv.generate_random_offers(randomNumber->text().toInt());
 			updateWish(wishlist);
 			updateList(offer_list);
+			updateLabel(currOfrs);
 		}
 	}
 	catch (WishExcept& msg) {

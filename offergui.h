@@ -14,6 +14,7 @@ private:
 	ServiceOffer& serv;
 	QWidget* wish = new QWidget();
 	QWidget* window = new QWidget();
+	QLabel* currOfrs = new QLabel();
 	QHBoxLayout* hLay = new QHBoxLayout(window);
 	QVBoxLayout* vLay = new QVBoxLayout(window);
 	QVBoxLayout* vLayWish = new QVBoxLayout();
@@ -89,6 +90,7 @@ private:
 	void initGUIfields();
 	void updateList(QListWidget* lst);
 	void updateWish(QListWidget* wishlst);
+	void updateLabel(QLabel* lbl);
 
 public:
 	OfferGUI(ServiceOffer& serv) : serv{ serv } {
