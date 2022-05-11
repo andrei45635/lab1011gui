@@ -21,7 +21,8 @@ void OfferGUI::initGUIfields() {
 	formLayout->addRow(new QLabel("Destination"), destinatie_txt);
 	formLayout->addRow(new QLabel("Type"), type_txt);
 	formLayout->addRow(new QLabel("Price"), price_txt);
-	formLayout->addRow(new QLabel("Position to find"), position_of_offer);
+	formLayout->addRow(new QLabel("Position to find"), position_of_offer_to_search);
+	formLayout->addRow(new QLabel("Offer to delete"), position_of_offer_to_del);
 	hLay->addLayout(vLay);
 	vLay->addWidget(wind_det);
 	vLay->addWidget(btnAdd);
@@ -53,6 +54,10 @@ void OfferGUI::addOfferGUI() {
 	try {
 		serv.addServiceOffer(denumire_txt->text().toStdString(), destinatie_txt->text().toStdString(), type_txt->text().toStdString(), price_txt->text().toDouble());
 		updateList(offer_list);
+		denumire_txt->clear();
+		destinatie_txt->clear();
+		type_txt->clear();
+		price_txt->clear();
 	}
 	catch (RepoException& msg) {
 		QMessageBox::critical(this, "Eroare critica!", QString::fromStdString(msg.getMessage()));
@@ -64,9 +69,9 @@ void OfferGUI::addOfferGUI() {
 
 void OfferGUI::delOfferGUI() {
 	try {
-		Offer ofr{ denumire_txt->text().toStdString(), destinatie_txt->text().toStdString(), type_txt->text().toStdString(), price_txt->text().toDouble() };
-		serv.deleteServiceForUndo(ofr);
+		serv.deleteServiceOffer(position_of_offer_to_del->text().toInt());
 		updateList(offer_list);
+		position_of_offer_to_del->clear();
 	}
 	catch (RepoException& msg) {
 		QMessageBox::critical(this, "Eroare critica!", QString::fromStdString(msg.getMessage()));
@@ -161,8 +166,9 @@ void OfferGUI::searchOfferGUI() {
 	dlg->setModal(true);
 	vdlg->addWidget(lblOffer);
 	dlg->setLayout(vdlg);
-	auto offer = serv.findOfferService(position_of_offer->text().toInt());
+	auto offer = serv.findOfferService(position_of_offer_to_search->text().toInt());
 	lblOffer->setText(QString::fromStdString(offer.toString()));
+	position_of_offer_to_search->clear();
 	dlg->exec();
 	updateList(offer_list);
 }
@@ -255,7 +261,7 @@ void OfferGUI::addWishlistGUI() {
 		updateLabel(currOfrs);
 	}
 	catch (WishExcept& msg) {
-		QMessageBox::critical(this, "Eroare!", QString::fromStdString(msg.getMessage()));
+		QMessageBox::critical(this->wish, "Eroare!", QString::fromStdString(msg.getMessage()));
 	}
 }
 
@@ -269,26 +275,27 @@ void OfferGUI::delWishlistGUI() {
 void OfferGUI::randomWishlistGUI() {
 	try {
 		if (randomNumber->text().toInt() < 0) {
-			QMessageBox::critical(this, "Eroare!", QString::fromStdString("You can't generate negative offers!"));
+			QMessageBox::critical(this->wish, "Eroare!", QString::fromStdString("You can't generate negative offers!"));
 		}
 		else if (randomNumber->text().toInt() > serv.getAllService().size()) {
-			QMessageBox::critical(this, "Eroare!", QString::fromStdString("Invalid number!"));
+			QMessageBox::critical(this->wish, "Eroare!", QString::fromStdString("Invalid number!"));
 		}
 		else {
 			serv.generate_random_offers(randomNumber->text().toInt());
 			updateWish(wishlist);
 			updateList(offer_list);
 			updateLabel(currOfrs);
+			randomNumber->clear();
 		}
 	}
 	catch (WishExcept& msg) {
-		QMessageBox::critical(this, "Eroare!", QString::fromStdString(msg.getMessage()));
+		QMessageBox::critical(this->wish, "Eroare!", QString::fromStdString(msg.getMessage()));
 	}
 	catch (ValidException& msg) {
-		QMessageBox::critical(this, "Eroare critica!", QString::fromStdString(msg.get_msg()));
+		QMessageBox::critical(this->wish, "Eroare critica!", QString::fromStdString(msg.get_msg()));
 	}
 	catch (RepoException& msg) {
-		QMessageBox::critical(this, "Eroare critica!", QString::fromStdString(msg.getMessage()));
+		QMessageBox::critical(this->wish, "Eroare critica!", QString::fromStdString(msg.getMessage()));
 	}
 }
 
@@ -297,7 +304,7 @@ void OfferGUI::exportHTMLGUI() {
 		serv.exporta_cos_HTML(fileName->text().toStdString());
 	}
 	catch (RepoException& msg) {
-		QMessageBox::critical(this, "Eroare critica!", QString::fromStdString(msg.getMessage()));
+		QMessageBox::critical(this->wish, "Eroare critica!", QString::fromStdString(msg.getMessage()));
 	}
 	QMessageBox::information(wish, "Success!", QString::fromStdString("Successfully exported!"));
 }
@@ -345,7 +352,6 @@ void OfferGUI::moisaGUI() {
 	}
 	QString moisaString = QString::fromStdString(ofr.toString());
 	QListWidgetItem* item = new QListWidgetItem(moisaString, moisaList);
-	//updateList(moisaList);
 	updateList(offer_list);
 	dlg->show();
 }

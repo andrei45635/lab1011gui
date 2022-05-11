@@ -54,7 +54,8 @@ private:
 	QLineEdit* wish_dest = new QLineEdit();
 	QLineEdit* filter_dest = new QLineEdit();
 	QLineEdit* filter_price = new QLineEdit();
-	QLineEdit* position_of_offer = new QLineEdit();
+	QLineEdit* position_of_offer_to_search = new QLineEdit();
+	QLineEdit* position_of_offer_to_del = new QLineEdit();
 	QLineEdit* randomNumber = new QLineEdit();
 	QLineEdit* fileName = new QLineEdit();
 	QLineEdit* positionToMod = new QLineEdit();
