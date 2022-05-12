@@ -51,6 +51,10 @@ private:
 	QLineEdit* new_dest = new QLineEdit();
 	QLineEdit* new_type = new QLineEdit();
 	QLineEdit* new_price = new QLineEdit();
+	QLineEdit* old_denum = new QLineEdit();
+	QLineEdit* old_dest = new QLineEdit();
+	QLineEdit* old_type = new QLineEdit();
+	QLineEdit* old_price = new QLineEdit();
 	QLineEdit* wish_dest = new QLineEdit();
 	QLineEdit* filter_dest = new QLineEdit();
 	QLineEdit* filter_price = new QLineEdit();
