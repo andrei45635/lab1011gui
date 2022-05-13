@@ -108,8 +108,10 @@ vector<Offer> ServiceOffer::sorted() {
 	vector<Offer> typed = generalSort([](const Offer& ofr1, const Offer& ofr2) { return (ofr1.getType() < ofr2.getType() || (ofr1.getPrice() < ofr2.getPrice())); });
 	auto sortofs = getAllService();
 	std::sort(sortofs.begin(), sortofs.end(), [](const Offer& ofr1, const Offer& ofr2) {
-		return (ofr1.getType() < ofr2.getType()) && (ofr1.getPrice() < ofr2.getPrice()); });
-	return getAllService();
+		return (ofr1.getType() < ofr2.getType()); });
+	std::sort(sortofs.begin(), sortofs.end(), [](const Offer& ofr1, const Offer& ofr2) {
+		return (ofr1.getPrice() < ofr2.getPrice()); });
+	return sortofs;
 }
 
 void ServiceOffer::check_if_Kiev(const vector<Offer>& hohols) {
@@ -375,4 +377,39 @@ void testGenerateRandom() {
 	test_serv.addServiceOffer(denum2, dest2, type2, price2);
 	test_serv.generate_random_offers(2);
 	assert(test_serv.get_all_from_wish().size() == 2);
+	test_serv.exporta_cos_HTML("test_file.html");
+}
+
+void testUndo() {
+	RepoOffer test_repo;
+	OfferValidator test_valid;
+	Wishlist test_wish;
+	ServiceOffer test_serv(test_repo, test_valid, test_wish);
+	string denum = "Familie";
+	string dest = "Kiev";
+	string type = "Roadtrip";
+	double price = 69;
+	test_serv.addServiceOffer(denum, dest, type, price);
+	string denum2 = "Business";
+	string dest2 = "Odesa";
+	string type2 = "Tren";
+	double price2 = 169;
+	test_serv.addServiceOffer(denum2, dest2, type2, price2);
+	auto& offers = test_serv.getAllService();
+	assert(offers.size() == 2);
+	test_serv.Undo();
+	assert(offers.size() == 1);
+	test_serv.addServiceOffer(denum2, dest2, type2, price2);
+	Offer ofr1{ denum, dest, type, price };
+	test_serv.deleteServiceForUndo(ofr1);
+	assert(offers.size() == 1);
+	test_serv.Undo();
+	assert(offers.size() == 2);
+	Offer new_ofr{ "a", "b", "c", 14 };
+	test_serv.modifyServiceForUndo(ofr1, new_ofr);
+	assert(offers.size() == 2);
+	assert(offers[1].getDenumire() == "a");
+	test_serv.Undo();
+	assert(offers[1].getDenumire() == denum);
+	assert(offers.size() == 2);
 }

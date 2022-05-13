@@ -14,13 +14,19 @@
 #include "qmessagebox.h"
 #include "qpixmap.h"
 #include "qfont.h"
+#include "qtableview.h"
+#include "qtablewidget.h"
+#include <set>
+#include <vector>
 
 class OfferGUI : public QWidget {
 private:
 	ServiceOffer& serv;
 	QWidget* wish = new QWidget();
 	QWidget* window = new QWidget();
+	QWidget* dynWindow = new QWidget();
 	QLabel* currOfrs = new QLabel();
+	QVBoxLayout* dynLay = new QVBoxLayout();
 	QHBoxLayout* hLay = new QHBoxLayout(window);
 	QVBoxLayout* vLay = new QVBoxLayout(window);
 	QVBoxLayout* vLayWish = new QVBoxLayout();
@@ -37,6 +43,7 @@ private:
 	QPushButton* btnSortTypePrice = new QPushButton("Sort by type and price");
 	QPushButton* btnUndo = new QPushButton("Undo last operation");
 	QPushButton* btnWish = new QPushButton("Generate a wishlist");
+	QPushButton* btnKiev = new QPushButton("Hohol finder");
 	QPushButton* btnAddWishlist = new QPushButton("Add to the wishlist");
 	QPushButton* btnDelWishlist = new QPushButton("Delete from wishlist");
 	QPushButton* btnRandomWishlist = new QPushButton("Generate random offers");
@@ -64,7 +71,8 @@ private:
 	QLineEdit* fileName = new QLineEdit();
 	QLineEdit* positionToMod = new QLineEdit();
 	QListWidget* offer_list = new QListWidget();
-	QListWidget* wishlist = new QListWidget();
+	//QListWidget* wishlist = new QListWidget();
+	QTableWidget* wishtable = new QTableWidget();
 
 	void addOfferGUI();
 	void delOfferGUI();
@@ -84,6 +92,9 @@ private:
 	void undoGUI();
 	void moisaGUI();
 	void populateGUI();
+	void updateDynBtnGUI();
+	void clearLayout(QLayout* lay);
+	int howMany(const std::vector<Offer>& offers, const string& dest);
 	void on_click_add();
 	void on_click_del();
 	void on_click_filter_dest();
@@ -102,8 +113,11 @@ private:
 	void on_click_populate();
 	void on_click_moisa();
 	void initGUIfields();
+	void checkKievGUI();
+	void on_click_Kiev();
 	void updateList(QListWidget* lst);
-	void updateWish(QListWidget* wishlst);
+	//void updateWish(QListWidget* wishlst);
+	void updateWish(QTableWidget* wishtbl);
 	void updateLabel(QLabel* lbl);
 
 public:
@@ -126,6 +140,8 @@ public:
 		on_click_undo();
 		on_click_populate();
 		on_click_moisa();
+		on_click_Kiev();
 		updateList(offer_list);
+		updateDynBtnGUI();
 	}
 };

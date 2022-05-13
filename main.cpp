@@ -25,6 +25,7 @@ void runAllTests() {
 	testAddToWish();
 	testDeleteWish();
 	testGenerateWish();
+	testUndo();
 	std::cout << "finished testing..." << std::endl;
 }
 

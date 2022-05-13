@@ -21,7 +21,7 @@ double Offer::getPrice() const {
 }
 
 string Offer::toString() const {
-	return "Denumirea ofertei: " + denum + ", destinatia: " + dest + ", tipul: " + type + ", pretul: " + std::to_string(round(price * 1000.0) / 1000.0);
+	return "Name: " + denum + ", destination: " + dest + ", type: " + type + ", price: " + std::to_string(round(price * 1000.0) / 1000.0);
 }
 
 void testCreateOffer() {
@@ -34,4 +34,5 @@ void testCreateOffer() {
 	assert(ofr.getDestinatie() == dest);
 	assert(ofr.getType() == type);
 	assert(fabs(ofr.getPrice() - price) < 0.00001);
+	ofr.toString();
 }

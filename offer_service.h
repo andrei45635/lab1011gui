@@ -111,3 +111,4 @@ void testSorts();
 void testAddCart();
 void testDeleteFromCart();
 void testGenerateRandom();
+void testUndo();
