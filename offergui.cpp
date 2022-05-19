@@ -104,6 +104,11 @@ void OfferGUI::updateWish(QTableWidget* wishtbl) {
 		wishtable->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(offers[row].getDestinatie())));
 		wishtable->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(offers[row].getType())));
 		wishtable->setItem(row, 3, new QTableWidgetItem(QString::number(offers[row].getPrice())));
+		for (int j = 0; j < wishtable->columnCount(); j++) {
+			if(QString::fromStdString(offers[row].getDenumire()) == "Honeymoon")
+				wishtable->item(row, j)->setBackground(Qt::green);
+			else wishtable->item(row, j)->setBackground(Qt::red);
+		}
 	}
 	//for (const auto& wsh : offers) {
 		//QString string = QString::fromStdString(wsh.toString());
