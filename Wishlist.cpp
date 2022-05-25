@@ -23,6 +23,7 @@ vector<Offer> Wishlist::get_all_wishlist() {
 void Wishlist::delete_all_wishlist() {
 	vector<Offer> to_del;
 	wishlist = to_del;
+	notifyTbl();
 }
 
 bool Wishlist::find_in_wishlist(const Offer& ofr) {
@@ -44,7 +45,10 @@ void Wishlist::add_wishlist(const Offer& ofr) {
 	if (find_in_wishlist(ofr)) {
 		throw WishExcept("oferta este deja in lista!\n");
 	}
-	else wishlist.push_back(ofr);
+	else {
+		wishlist.push_back(ofr);
+		notifyTbl();
+	}
 }
 
 /*
@@ -56,6 +60,7 @@ void Wishlist::generate_offers(const vector<Offer>& list) {
 	delete_all_wishlist();
 	for (const auto& ofr : list) {
 		add_wishlist(ofr);
+		notifyTbl();
 	}
 }
 

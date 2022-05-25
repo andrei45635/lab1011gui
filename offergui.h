@@ -16,10 +16,11 @@
 #include "qfont.h"
 #include "qtableview.h"
 #include "qtablewidget.h"
+#include "Observer.h"
 #include <set>
 #include <vector>
 
-class OfferGUI : public QWidget {
+class OfferGUI : public QWidget, public Observer {
 private:
 	ServiceOffer& serv;
 	QWidget* wish = new QWidget();
@@ -50,10 +51,11 @@ private:
 	QPushButton* btnExportHTML = new QPushButton("Export the wishlist to HTML");
 	QPushButton* btnPopulate = new QPushButton("Populate with 8 offers!");
 	QPushButton* btnMoisa = new QPushButton("Capitalist Capitals");
+	QPushButton* btnWind = new QPushButton("New Window");
 	QLineEdit* denumire_txt = new QLineEdit();
 	QLineEdit* destinatie_txt = new QLineEdit();
 	QLineEdit* type_txt = new QLineEdit();
-	QLineEdit* price_txt = new QLineEdit(); 
+	QLineEdit* price_txt = new QLineEdit();
 	QLineEdit* new_denum = new QLineEdit();
 	QLineEdit* new_dest = new QLineEdit();
 	QLineEdit* new_type = new QLineEdit();
@@ -115,9 +117,16 @@ private:
 	void initGUIfields();
 	void checkKievGUI();
 	void on_click_Kiev();
+	void on_click_new_window();
 	void updateList(QListWidget* lst);
 	//void updateWish(QListWidget* wishlst);
 	void updateWish(QTableWidget* wishtbl);
+	void updateLst() override {
+		this->updateList(this->offer_list);
+	}
+	void updateTbl() override {
+		this->updateWish(this->wishtable);
+	}
 	void updateLabel(QLabel* lbl);
 
 public:
@@ -141,6 +150,7 @@ public:
 		on_click_populate();
 		on_click_moisa();
 		on_click_Kiev();
+		on_click_new_window();
 		updateList(offer_list);
 		updateDynBtnGUI();
 	}

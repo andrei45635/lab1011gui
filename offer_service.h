@@ -12,22 +12,27 @@
 * Clasa ServiceOffer
 * Service-ul ofertelor, primeste ca atribut repo-ul
 */
-class ServiceOffer {
+class ServiceOffer: public Observable {
 private:
 	RepoOffer& repo;
 	OfferValidator& valid;
 	std::vector<std::unique_ptr<ActiuneUndo>> undoList;
-	Wishlist& wish;
+	//Wishlist& wish;
 
 public:
+
+	Wishlist wish;
+
+	ServiceOffer() = default;
+
 	/*
 	* Constructor
 	*/
-	ServiceOffer(RepoOffer& repo, OfferValidator& valid, Wishlist& wish) : repo{ repo }, valid{ valid }, wish{ wish } {
+	ServiceOffer(RepoOffer& repo, OfferValidator& valid) : repo{ repo }, valid{ valid }{
 	}
 
 	ServiceOffer(const ServiceOffer& ot) = delete;
-	ServiceOffer() = default;
+	//ServiceOffer() = default;
 	/*
 	* Adauga in service ofertele
 	* pre:
@@ -99,7 +104,7 @@ public:
 
 	void check_if_Kiev(const vector<Offer>& hohols);
 
-	void exporta_cos_HTML(const string& fileName) const;
+	void exporta_cos_HTML(const string& fileName);
 };
 
 void testCreateService();

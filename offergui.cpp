@@ -1,6 +1,7 @@
 #include "offergui.h"
 
 void OfferGUI::initGUIfields() {
+	serv.addObserver(this);
 	setLayout(hLay);
 	setLayout(vLay);
 	QWidget* windLeft = new QWidget();
@@ -23,6 +24,7 @@ void OfferGUI::initGUIfields() {
 	formLayout->addRow(new QLabel("Price"), price_txt);
 	formLayout->addRow(new QLabel("Position to find"), position_of_offer_to_search);
 	dynWindow->setLayout(dynLay);
+	updateList(offer_list);
 	updateDynBtnGUI();
 	hLay->addWidget(dynWindow);
 	hLay->addLayout(vLay);
@@ -33,6 +35,7 @@ void OfferGUI::initGUIfields() {
 	vLay->addWidget(btnUndo);
 	vLay->addWidget(btnWish);
 	vLay->addWidget(btnPopulate);
+	vLay->addWidget(btnWind);
 	vLay->addWidget(btnMoisa);
 }
 
@@ -105,7 +108,7 @@ void OfferGUI::updateWish(QTableWidget* wishtbl) {
 		wishtable->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(offers[row].getType())));
 		wishtable->setItem(row, 3, new QTableWidgetItem(QString::number(offers[row].getPrice())));
 		for (int j = 0; j < wishtable->columnCount(); j++) {
-			if(QString::fromStdString(offers[row].getDenumire()) == "Honeymoon")
+			if (QString::fromStdString(offers[row].getDenumire()) == "Honeymoon")
 				wishtable->item(row, j)->setBackground(Qt::green);
 			else wishtable->item(row, j)->setBackground(Qt::red);
 		}
@@ -309,6 +312,7 @@ void OfferGUI::updateLabel(QLabel* lbl) {
 }
 
 void OfferGUI::createWishlistGUI() {
+	serv.wish.addObserver(this);
 	wish->setLayout(vLayWish);
 	vLayWish->addWidget(wishtable);
 	updateLabel(currOfrs);
@@ -498,4 +502,11 @@ void OfferGUI::on_click_moisa() {
 
 void OfferGUI::on_click_Kiev() {
 	QObject::connect(btnKiev, &QPushButton::clicked, this, &OfferGUI::checkKievGUI);
+}
+
+void OfferGUI::on_click_new_window() {
+	QObject::connect(btnWind, &QPushButton::clicked, this, [this]() {
+		auto nW = OfferGUI(serv);
+		nW.show();
+		});
 }

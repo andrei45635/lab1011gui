@@ -38,10 +38,17 @@ int main(int argc, char *argv[])
 	RepoOffer repo;
 	//FileRepoOffer file_repo("oferte.txt");
 	Wishlist wish;
-	ServiceOffer serv(repo, valid, wish);
+	ServiceOffer serv(repo, valid);
 	//UI ui(serv);
 	//ui.startUI();
 	auto gui = OfferGUI(serv);
+	gui.move(200, 10);
 	gui.show();
+	auto gui2 = OfferGUI(serv);
+	gui2.move(300, 10);
+	gui2.show();
+	auto gui3 = OfferGUI(serv);
+	gui3.move(400, 10);
+	gui3.show();
     return a.exec();
 }

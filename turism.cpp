@@ -35,7 +35,7 @@ void main2() {
 	RepoOffer repo;
 	//FileRepoOffer file_repo("oferte.txt");
 	Wishlist wish;
-	ServiceOffer serv(repo, valid, wish);
+	ServiceOffer serv(repo, valid);
 	UI ui(serv);
 	ui.startUI();
 }

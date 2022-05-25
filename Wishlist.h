@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "oferta.h"
+#include "Observer.h"
 
 using std::vector;
 
@@ -25,7 +26,7 @@ public:
 	string getMessage();
 };
 
-class Wishlist {
+class Wishlist: public Observable{
 private:
 	vector<Offer> wishlist;
 

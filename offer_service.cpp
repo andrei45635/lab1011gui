@@ -12,6 +12,7 @@ void ServiceOffer::addServiceOffer(string denum, string dest, string type, doubl
 	valid.validate_offer(ofr);
 	repo.addRepoOffer(ofr);
 	undoList.push_back(std::make_unique<AddUndo>(repo, ofr));
+	notifyLst();
 }
 
 const vector<Offer>& ServiceOffer::getAllService() {
@@ -20,11 +21,13 @@ const vector<Offer>& ServiceOffer::getAllService() {
 
 void ServiceOffer::deleteServiceOffer(int pos) {
 	repo.deleteRepoOffer(pos);
+	notifyLst();
 }
 
 void ServiceOffer::deleteServiceForUndo(const Offer& ofr) {
 	repo.deleteOffersForUndo(ofr);
 	undoList.push_back(std::make_unique<DeleteUndo>(repo, ofr));
+	notifyLst();
 }
 
 void ServiceOffer::modifyServiceOffer(int pos, string new_denum, string new_dest, string new_type, double new_price) {
@@ -32,18 +35,21 @@ void ServiceOffer::modifyServiceOffer(int pos, string new_denum, string new_dest
 	//validare oferta
 	valid.validate_offer(new_ofr);
 	repo.modifyRepoOffer(pos, new_ofr);
+	notifyLst();
 }
 
 void ServiceOffer::modifyServiceForUndo(const Offer& old_ofr, const Offer& new_ofr) {
 	//valid.validate_offer(new_ofr);
 	repo.modifyOfferForUndo(old_ofr, new_ofr);
 	undoList.push_back(std::make_unique<ModifyUndo>(repo, old_ofr, new_ofr));
+	notifyLst();
 }
 
 void ServiceOffer::Undo() {
 	if (undoList.empty()) throw RepoException{ "Nu exista operatii pentru undo!\n" };
 	undoList.back()->doUndo();
 	undoList.pop_back();
+	notifyLst();
 }
 
 Offer ServiceOffer::findOfferService(int pos) {
@@ -153,15 +159,15 @@ vector<Offer> ServiceOffer::get_all_from_wish() {
 	return wish.get_all_wishlist();
 }
 
-void ServiceOffer::exporta_cos_HTML(const string& fileName) const {
-	exportToHTML(fileName, wish.get_all_wishlist());
+void ServiceOffer::exporta_cos_HTML(const string& fileName){
+	exportToHTML(fileName, this->wish.get_all_wishlist());
 }
 
 void testCreateService() {
 	RepoOffer test_repo;
 	OfferValidator test_valid;
 	Wishlist test_wish;
-	ServiceOffer test_serv(test_repo, test_valid, test_wish);
+	ServiceOffer test_serv(test_repo, test_valid);
 	string denum = "Familie";
 	string dest = "Kiev";
 	string type = "Roadtrip";
@@ -175,7 +181,7 @@ void testDeleteOfferService() {
 	RepoOffer test_repo;
 	OfferValidator test_valid;
 	Wishlist test_wish;
-	ServiceOffer test_serv(test_repo, test_valid, test_wish);
+	ServiceOffer test_serv(test_repo, test_valid);
 	string denum = "Familie";
 	string dest = "Kiev";
 	string type = "Roadtrip";
@@ -199,7 +205,7 @@ void testModifyOfferService() {
 	RepoOffer test_repo;
 	OfferValidator test_valid;
 	Wishlist test_wish;
-	ServiceOffer test_serv(test_repo, test_valid, test_wish);
+	ServiceOffer test_serv(test_repo, test_valid);
 	string denum = "Familie";
 	string dest = "Kiev";
 	string type = "Roadtrip";
@@ -234,7 +240,7 @@ void testFindOfferService() {
 	RepoOffer test_repo;
 	OfferValidator test_valid;
 	Wishlist test_wish;
-	ServiceOffer test_serv(test_repo, test_valid, test_wish);
+	ServiceOffer test_serv(test_repo, test_valid);
 	string denum = "Familie";
 	string dest = "Kiev";
 	string type = "Roadtrip";
@@ -258,7 +264,7 @@ void testFilters() {
 	RepoOffer test_repo;
 	OfferValidator test_valid;
 	Wishlist test_wish;
-	ServiceOffer test_serv(test_repo, test_valid, test_wish);
+	ServiceOffer test_serv(test_repo, test_valid);
 	string denum = "Familie";
 	string dest = "Kiev";
 	string type = "Roadtrip";
@@ -289,7 +295,7 @@ void testSorts() {
 	RepoOffer test_repo;
 	OfferValidator test_valid;
 	Wishlist test_wish;
-	ServiceOffer test_serv(test_repo, test_valid, test_wish);
+	ServiceOffer test_serv(test_repo, test_valid);
 	string denum = "Familie";
 	string dest = "Kiev";
 	string type = "Woadtrip";
@@ -320,7 +326,7 @@ void testAddCart() {
 	RepoOffer test_repo;
 	OfferValidator test_valid;
 	Wishlist test_wish;
-	ServiceOffer test_serv(test_repo, test_valid, test_wish);
+	ServiceOffer test_serv(test_repo, test_valid);
 	string denum = "Familie";
 	string dest = "Kiev";
 	string type = "Woadtrip";
@@ -341,7 +347,7 @@ void testDeleteFromCart() {
 	RepoOffer test_repo;
 	OfferValidator test_valid;
 	Wishlist test_wish;
-	ServiceOffer test_serv(test_repo, test_valid, test_wish);
+	ServiceOffer test_serv(test_repo, test_valid);
 	string denum = "Familie";
 	string dest = "Kiev";
 	string type = "Woadtrip";
@@ -363,7 +369,7 @@ void testGenerateRandom() {
 	RepoOffer test_repo;
 	OfferValidator test_valid;
 	Wishlist test_wish;
-	ServiceOffer test_serv(test_repo, test_valid, test_wish);
+	ServiceOffer test_serv(test_repo, test_valid);
 	string denum = "Familie";
 	string dest = "Kiev";
 	string type = "Woadtrip";
@@ -384,7 +390,7 @@ void testUndo() {
 	RepoOffer test_repo;
 	OfferValidator test_valid;
 	Wishlist test_wish;
-	ServiceOffer test_serv(test_repo, test_valid, test_wish);
+	ServiceOffer test_serv(test_repo, test_valid);
 	string denum = "Familie";
 	string dest = "Kiev";
 	string type = "Roadtrip";
