@@ -97,6 +97,28 @@ void OfferGUI::updateList(QListWidget* lst) {
 	updateDynBtnGUI();
 }
 
+void OfferGUI::updateWishGen(QTableWidget* wishtbl) {
+	wishtbl->clear();
+	wishtbl->setRowCount(serv.get_all_from_wish().size());
+	wishtbl->setColumnCount(4);
+	const auto& offers = serv.get_all_from_wish();
+	for (int row = 0; row < offers.size(); row++) {
+		wishtbl->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(offers[row].getDenumire())));
+		wishtbl->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(offers[row].getDestinatie())));
+		wishtbl->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(offers[row].getType())));
+		wishtbl->setItem(row, 3, new QTableWidgetItem(QString::number(offers[row].getPrice())));
+		for (int j = 0; j < wishtbl->columnCount(); j++) {
+			if (QString::fromStdString(offers[row].getDenumire()) == "Honeymoon")
+				wishtbl->item(row, j)->setBackground(Qt::green);
+			else wishtbl->item(row, j)->setBackground(Qt::red);
+		}
+	}
+	//for (const auto& wsh : offers) {
+		//QString string = QString::fromStdString(wsh.toString());
+		//QListWidgetItem* item = new QListWidgetItem(string, wishlst);
+	//}
+}
+
 void OfferGUI::updateWish(QTableWidget* wishtbl) {
 	wishtable->clear();
 	wishtable->setRowCount(serv.get_all_from_wish().size());
@@ -311,8 +333,95 @@ void OfferGUI::updateLabel(QLabel* lbl) {
 	lbl->setText("Current offers in the wishlist: " + QString::number(serv.get_all_from_wish().size()));
 }
 
+void OfferGUI::newWishWindowGUI() {
+	serv.wish.addObserver(this);
+	QWidget* newWind = new QWidget();
+	QVBoxLayout* vLayWishWind = new QVBoxLayout();
+	QFormLayout* formLayoutWishWind = new QFormLayout();
+	QLineEdit* newWishDest = new QLineEdit();
+	QLineEdit* newWishRandomNumber = new QLineEdit();
+	QLineEdit* newWishFileName = new QLineEdit();
+	QTableWidget* newWishTable = new QTableWidget();
+	QPushButton* btnNewAddWishlist = new QPushButton("Add to the wishlist");
+	QPushButton* btnNewDelWishlist = new QPushButton("Delete from wishlist");
+	QPushButton* btnNewRandomWishlist = new QPushButton("Generate random offers");
+	QPushButton* btnNewExportHTML = new QPushButton("Export the wishlist to HTML");
+	newWind->setLayout(vLayWishWind);
+	//vLayWishWind->addWidget(newWishTable);
+	vLayWishWind->addWidget(wishtable);
+	QLabel* newCurrOfrs = new QLabel();
+	updateLabel(newCurrOfrs);
+	vLayWishWind->addWidget(newCurrOfrs);
+	vLayWishWind->addLayout(formLayoutWishWind);
+	formLayoutWishWind->addRow(new QLabel("Destination"), newWishDest);
+	formLayoutWishWind->addRow(new QLabel("Random generator"), newWishRandomNumber);
+	formLayoutWishWind->addRow(new QLabel("File name (add .html)"), newWishFileName);
+	vLayWishWind->addWidget(btnNewAddWishlist);
+	vLayWishWind->addWidget(btnNewDelWishlist);
+	vLayWishWind->addWidget(btnNewRandomWishlist);
+	vLayWishWind->addWidget(btnNewExportHTML);
+
+	QObject::connect(btnNewAddWishlist, &QPushButton::clicked, this, [=]() {
+		try {
+			serv.add_to_wishlist(newWishDest->text().toStdString());
+			updateWishGen(wishtable);
+			updateList(offer_list);
+			updateLabel(newCurrOfrs);
+		}
+		catch (WishExcept& msg) {
+			QMessageBox::critical(newWind, "Critical!", QString::fromStdString(msg.getMessage()));
+		}});
+
+	QObject::connect(btnNewDelWishlist, &QPushButton::clicked, this, [=]() {
+		wishtable->clear();
+		serv.delete_from_wishlist();
+		updateWishGen(wishtable);
+		updateLabel(newCurrOfrs); });
+
+	QObject::connect(btnNewRandomWishlist, &QPushButton::clicked, this, [=]() {
+		try {
+			if (newWishRandomNumber->text().toInt() < 0) {
+				QMessageBox::critical(newWind, "Critical!", QString::fromStdString("You can't generate negative offers!"));
+			}
+			else if (newWishRandomNumber->text().toInt() > serv.getAllService().size()) {
+				QMessageBox::critical(newWind, "Critical!", QString::fromStdString("Invalid number!"));
+			}
+			else {
+				serv.generate_random_offers(newWishRandomNumber->text().toInt());
+				updateWishGen(wishtable);
+				updateList(offer_list);
+				updateLabel(newCurrOfrs);
+				newWishRandomNumber->clear();
+			}
+		}
+		catch (WishExcept& msg) {
+			QMessageBox::critical(newWind, "Critical!", QString::fromStdString(msg.getMessage()));
+		}
+		catch (ValidException& msg) {
+			QMessageBox::critical(newWind, "Critical!", QString::fromStdString(msg.get_msg()));
+		}
+		catch (RepoException& msg) {
+			QMessageBox::critical(newWind, "Critical!", QString::fromStdString(msg.getMessage()));
+		}
+		});
+
+	QObject::connect(btnNewExportHTML, &QPushButton::clicked, this, [=]() {
+		try {
+			serv.exporta_cos_HTML(newWishFileName->text().toStdString());
+		}
+		catch (RepoException& msg) {
+			QMessageBox::critical(newWind, "Critical!", QString::fromStdString(msg.getMessage()));
+		}
+		QMessageBox::information(newWind, "Success!", QString::fromStdString("Successfully exported!"));
+		});
+
+	updateWish(newWishTable);
+	newWind->show();
+}
+
 void OfferGUI::createWishlistGUI() {
 	serv.wish.addObserver(this);
+	QWidget* newWind = new QWidget();
 	wish->setLayout(vLayWish);
 	vLayWish->addWidget(wishtable);
 	updateLabel(currOfrs);
@@ -325,6 +434,7 @@ void OfferGUI::createWishlistGUI() {
 	vLayWish->addWidget(btnDelWishlist);
 	vLayWish->addWidget(btnRandomWishlist);
 	vLayWish->addWidget(btnExportHTML);
+	//newWind->set
 	wish->show();
 }
 
@@ -505,8 +615,12 @@ void OfferGUI::on_click_Kiev() {
 }
 
 void OfferGUI::on_click_new_window() {
-	QObject::connect(btnWind, &QPushButton::clicked, this, [this]() {
-		auto nW = OfferGUI(serv);
-		nW.show();
+	QObject::connect(btnWind, &QPushButton::clicked, this, &OfferGUI::newWishWindowGUI);
+}
+
+void OfferGUI::on_click_neue() {
+	QObject::connect(btnWind, &QPushButton::clicked, this,[=](){
+		auto nw = OfferGUI(serv);
+		nw.show();
 		});
 }

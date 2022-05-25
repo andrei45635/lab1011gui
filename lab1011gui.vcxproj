@@ -101,6 +101,7 @@
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="Validator.cpp" />
     <ClCompile Include="Wishlist.cpp" />
+    <ClInclude Include="HistogramaGUI.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="oferta.h" />
     <ClInclude Include="offergui.h" />

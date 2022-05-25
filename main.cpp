@@ -1,10 +1,11 @@
 #include "lab1011gui.h"
 #include "stdafx.h"
 #include "offergui.h"
-//#include "UI.h"
 #include "offer_service.h"
+#include "HistogramaGUI.h"
 #include <iostream>
 #include <QtWidgets/QApplication>
+//#include "UI.h"
 
 void runAllTests() {
 	std::cout << "beginning testing..." << std::endl;
@@ -41,6 +42,8 @@ int main(int argc, char *argv[])
 	ServiceOffer serv(repo, valid);
 	//UI ui(serv);
 	//ui.startUI();
+	HistogramGUI hGUI(serv);
+	hGUI.show();
 	auto gui = OfferGUI(serv);
 	gui.move(200, 10);
 	gui.show();

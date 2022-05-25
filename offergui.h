@@ -87,6 +87,7 @@ private:
 	void sortDestGUI();
 	void sortTypePriceGUI();
 	void createWishlistGUI();
+	void newWishWindowGUI();
 	void addWishlistGUI();
 	void delWishlistGUI();
 	void randomWishlistGUI();
@@ -118,14 +119,18 @@ private:
 	void checkKievGUI();
 	void on_click_Kiev();
 	void on_click_new_window();
+	void on_click_neue();
 	void updateList(QListWidget* lst);
 	//void updateWish(QListWidget* wishlst);
 	void updateWish(QTableWidget* wishtbl);
+	void updateWishGen(QTableWidget* wishtbl);
 	void updateLst() override {
 		this->updateList(this->offer_list);
 	}
 	void updateTbl() override {
 		this->updateWish(this->wishtable);
+		this->updateWishGen(this->wishtable);
+		this->updateLabel(this->currOfrs);
 	}
 	void updateLabel(QLabel* lbl);
 
@@ -150,8 +155,12 @@ public:
 		on_click_populate();
 		on_click_moisa();
 		on_click_Kiev();
+		on_click_neue();
 		on_click_new_window();
 		updateList(offer_list);
 		updateDynBtnGUI();
+	}
+	~OfferGUI() {
+		serv.removeObserver(this);
 	}
 };
