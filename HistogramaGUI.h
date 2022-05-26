@@ -28,7 +28,7 @@ public:
 	void updateTbl() override {
 		repaint();
 	}
-	~HistogramGUI() {
+	~HistogramGUI() {	
 		serv.removeObserver(this);
 	}
 };
