@@ -621,6 +621,6 @@ void OfferGUI::on_click_new_window() {
 void OfferGUI::on_click_neue() {
 	QObject::connect(btnWind, &QPushButton::clicked, this,[=](){
 		auto nw = new OfferGUI(serv);
-		nw.show();
+		nw->show();
 		});
 }
