@@ -73,6 +73,9 @@
     <ClCompile Include="offergui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="offerguiModele.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="export.h">
@@ -109,6 +112,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HistogramaGUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="offerguiModele.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MyListModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MyTableModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

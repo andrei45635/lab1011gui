@@ -97,14 +97,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="offergui.cpp" />
+    <ClCompile Include="offerguiModele.cpp" />
     <ClCompile Include="turism.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="Validator.cpp" />
     <ClCompile Include="Wishlist.cpp" />
     <ClInclude Include="HistogramaGUI.h" />
+    <ClInclude Include="MyListModel.h" />
+    <ClInclude Include="MyTableModel.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="oferta.h" />
     <ClInclude Include="offergui.h" />
+    <ClInclude Include="offerguiModele.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="undo.h" />
     <ClInclude Include="validator.h" />

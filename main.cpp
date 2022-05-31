@@ -1,6 +1,7 @@
 #include "lab1011gui.h"
 #include "stdafx.h"
 #include "offergui.h"
+#include "offerguiModele.h"
 #include "offer_service.h"
 #include "HistogramaGUI.h"
 #include <iostream>
@@ -42,7 +43,7 @@ int main(int argc, char *argv[])
 	ServiceOffer serv(repo, valid);
 	//UI ui(serv);
 	//ui.startUI();
-	HistogramGUI hGUI(serv);
+	/*HistogramGUI hGUI(serv);
 	hGUI.show();
 	auto gui = OfferGUI(serv);
 	gui.move(200, 10);
@@ -52,6 +53,8 @@ int main(int argc, char *argv[])
 	gui2.show();
 	auto gui3 = OfferGUI(serv);
 	gui3.move(400, 10);
-	gui3.show();
+	gui3.show();*/
+	auto guiModel = OfferGUIModele(serv);
+	guiModel.show();
     return a.exec();
 }
