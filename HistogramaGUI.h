@@ -13,6 +13,7 @@ public:
 	}
 	void paintEvent(QPaintEvent* ev) override {
 		QPainter p{ this };
+		p.setRenderHint(QPainter::Antialiasing);
 		int x = 0;
 		int y = 0;
 		for (const auto& ofr : serv.get_all_from_wish()) {
